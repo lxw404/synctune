@@ -1,0 +1,23 @@
+{
+    "name": "synctune",
+    "description": "",
+    "version": "0.1.0",
+    "main": "server.js",
+    "author": "lxw404",
+    "license": "BSD-3-Clause-Attribution",
+    "dependencies": {
+        "express": "latest",
+        "jquery": "^3.5.1",
+        "readline": "latest",
+        "soundcloud": "^3.3.2"
+    },
+    "devDependencies": {
+        "tinyify": "^2.5.2"
+    },
+    "scripts": {
+        "build": "browserify --s synctune public/synctune.js -p tinyify -o public/dist/synctune.min.js",
+        "build-debug": "browserify --s synctune public/synctune.js -o public/dist/synctune.min.js",
+        "debug": "npm run build-debug && node server.js",
+        "start": "npm run build && node server.js"
+    }
+}
