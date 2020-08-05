@@ -18,7 +18,7 @@ const POLL_DELTA = 1000;  // Poll delta (ms)
 var widget = {};   // Widget
 var playlist = []; // Current playlist
 var jn = 0;        // Current request number
-var gTitle = "";   // Gallery title
+var cmdQueue = ['load']; // Queue of commands
 
 // Is an element contained within two index boundaries?
 function conT(e, ind, end){
@@ -34,8 +34,8 @@ function reqLink(linkName, i){
         method: 'GET',
     }).done(function(res){
         // Store and render data
-        rawList = res.match(/[^\r\n]+/g);
-        showGallery(rawList);
+        //rawList = res.match(/[^\r\n]+/g);
+        //showGallery(rawList);
     }).fail(function(res){
         // Handle failure to load resource
         if ((i+1) > MAX_RETRY){
@@ -49,6 +49,60 @@ function reqLink(linkName, i){
             }, RETRY_DELAY);
         }
     });
+}
+
+function execCmd(cmd){
+    if (cmd == "play"){
+        console.log("PLAY");
+        widget.play();
+    }
+    else if (cmd == "pause"){
+        console.log("PAUSE");
+        widget.pause();
+    }
+    else {
+        // Regular expression check
+        var pat = /load https*:\/\/soundcloud.com(\/[\S]+)/g;
+        //var mat = cmd.match(pat);
+        var mat = pat.exec(cmd);
+        //console.log(mat);
+        //console.log(mat.length);
+        if (mat != null){
+            if (mat.length == 2){
+                console.log("LOAD:" + mat[1]);
+                widget.load(mat[1], {
+                    callback: function(e){
+                        console.log("LOADED");
+                        cmdQueue.shift();
+                        if (cmdQueue.length > 0){
+                            execCmd(cmdQueue[0]);
+                        }
+                    }
+                });
+            }
+        }
+        else {
+            pat = /seek ([\d]+)/g;
+            mat = pat.exec(cmd);
+            console.log(mat);
+            if (mat != null){
+                if (mat.length == 2){
+                    console.log("SEEK: " + mat[1]);
+                    widget.seekTo(parseInt(mat[1], 10));
+                }
+            }
+        }
+    }
+}
+
+function tryCmd(cmd){
+    // Enqueue to prevent further execution
+    cmdQueue.push(cmd);
+    
+    // Check if ready to execute
+    if (cmdQueue.length == 1){
+        execCmd(cmd);
+    }
 }
 
 // Handle creating jsonp request
@@ -66,43 +120,7 @@ function onT(){
                 // Check command
                 if (('cmd' in data) && !($.isEmptyObject(widget))){
                     var cmd = data['cmd'];
-                    if (cmd == "play"){
-                        console.log("PLAY");
-                        widget.play();
-                    }
-                    else if (cmd == "pause"){
-                        console.log("PAUSE");
-                        widget.pause();
-                    }
-                    else {
-                        // Regular expression check
-                        var pat = /load https*:\/\/soundcloud.com(\/[\S]+)/g;
-                        //var mat = cmd.match(pat);
-                        var mat = pat.exec(cmd);
-                        //console.log(mat);
-                        //console.log(mat.length);
-                        if (mat != null){
-                            if (mat.length == 2){
-                                console.log("LOAD:" + mat[1]);
-                                widget.load(mat[1], {
-                                    callback: function(e){
-                                        console.log("LOADED");
-                                    }
-                                });
-                            }
-                        }
-                        else {
-                            pat = /seek ([\d]+)/g;
-                            mat = pat.exec(cmd);
-                            console.log(mat);
-                            if (mat != null){
-                                if (mat.length == 2){
-                                    console.log("SEEK: " + mat[1]);
-                                    widget.seekTo(parseInt(mat[1], 10));
-                                }
-                            }
-                        }
-                    }
+                    tryCmd(cmd);
                 }
             }
         }
@@ -129,7 +147,43 @@ $(document).ready(function(){
     widget = SC.Widget(ifr);
     
     // Bind player events
+    widget.bind(SC.Widget.Events.READY, function(e){
+        console.log("READY");
+        cmdQueue.shift();
+        if (cmdQueue.length > 0){
+            execCmd(cmdQueue[0]);
+        }
+    });
+    
+    widget.bind(SC.Widget.Events.PLAY, function(e){
+        console.log("PLAYING");
+        cmdQueue.shift();
+        if (cmdQueue.length > 0){
+            execCmd(cmdQueue[0]);
+        }
+    });
+    
+    widget.bind(SC.Widget.Events.PAUSE, function(e){
+        console.log("PAUSED");
+        cmdQueue.shift();
+        if (cmdQueue.length > 0){
+            execCmd(cmdQueue[0]);
+        }
+    });
+    
+    widget.bind(SC.Widget.Events.SEEK, function(e){
+        console.log("SEEKED");
+        cmdQueue.shift();
+        if (cmdQueue.length > 0){
+            execCmd(cmdQueue[0]);
+        }
+    });
+    
     widget.bind(SC.Widget.Events.FINISH, function(e){
         console.log("FINISHED");
+        cmdQueue.shift();
+        if (cmdQueue.length > 0){
+            execCmd(cmdQueue[0]);
+        }
     });
 });
