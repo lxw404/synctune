@@ -210,6 +210,31 @@ var si = setInterval(onT, POLL_DELTA);
 
 // On document load, add content
 $(document).ready(function(){
+    // Create iframes
+    var ifr_sc = document.createElement('iframe');
+    ifr_sc.setAttribute('id', 'player-sc');
+    ifr_sc.setAttribute('type', 'text/html');
+    ifr_sc.setAttribute('width', '0%');
+    ifr_sc.setAttribute('height', '0');
+    ifr_sc.setAttribute('scrolling', 'no');
+    ifr_sc.setAttribute('frameborder', 'no');
+    ifr_sc.setAttribute('allow', 'autoplay');
+    ifr_sc.setAttribute('style', 'visibility: hidden;');
+    ifr_sc.setAttribute('src', 'https://w.soundcloud.com/player/?url=');
+    var ifr_yt = document.createElement('iframe');
+    ifr_yt.setAttribute('id', 'player-yt');
+    ifr_yt.setAttribute('type', 'text/html');
+    ifr_yt.setAttribute('width', '0%');
+    ifr_yt.setAttribute('height', '0');
+    ifr_yt.setAttribute('scrolling', 'no');
+    ifr_yt.setAttribute('frameborder', 'no');
+    ifr_yt.setAttribute('allow', 'autoplay');
+    ifr_yt.setAttribute('style', 'visibility: hidden;');
+    ifr_yt.setAttribute('src', 'http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1');
+    var ifr = document.getElementById('ifr');
+    ifr.appendChild(ifr_sc);
+    ifr.appendChild(ifr_yt);
+    
     // Initialize YT player
     var tag = document.createElement('script');
     tag.id = 'yt-iframe-api';

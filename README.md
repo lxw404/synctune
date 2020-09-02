@@ -1,5 +1,5 @@
-# InstaGallery
-*InstaGallery* is a simple gallery based front-end for displaying a list of images and associated text/links.  The easiest source of these image lists can come from [Pastebin](https://pastebin.com/) or similarly hosted raw text files.
+# SyncTune
+*SyncTune* allows for synchronized media playing across different instances.  It provides controls for multiple media APIs including YouTube and SoundCloud.
 
 This project contains both the front-end and back-end test benching utility.
 
@@ -26,9 +26,15 @@ This will first compile and compress the client javascript and then begin an int
 
 You will be prompted with:
 ```bash
-Input pastebin link>
+Command>
 ```
 
-wherein a link to the raw text should be inputted.
-
 Navigate to the page: [http://localhost:8081](http://localhost:8081) and you will see the client wherein the link will be requested, interpreted, and rendered.
+
+## Commands
+The following commands are currently supported:
+
+* `load <url>` - Loads a specified URL (doesn't autoplay)
+* `play` - Plays the currently loaded media
+* `pause` - Pauses the currently loaded media
+* `seek <time>` - Seeks to the time specified in milliseconds
