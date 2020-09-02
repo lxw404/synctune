@@ -6,12 +6,16 @@
     <link href='synctune.css' rel='stylesheet'/>
     <link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css' rel='stylesheet'/>
     <!--link href='jquery-gridder.min.css' rel='stylesheet'/-->
+    <!--script type='text/javascript' src='https://www.youtube.com/iframe_api'></script-->
     <script type='text/javascript' src='dist/synctune.min.js'></script>
     <script type='text/javascript' src='https://w.soundcloud.com/player/api.js'></script>
   </head>
   <body>
-    <iframe width="0%" height="0" scrolling="no" frameborder="no" allow="autoplay" style="visibility: hidden;"
+    <iframe id="player-sc" width="0%" height="0" scrolling="no" frameborder="no" allow="autoplay" style="visibility: hidden;"
         src="https://w.soundcloud.com/player/?url=">
+    </iframe>
+    <iframe id="player-yt" type="text/html" width="0%" height="0" scrolling="no" frameborder="no" style="visibility: hidden;"
+        src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1">
     </iframe>
     <style id='sty'>
     </style>
