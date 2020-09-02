@@ -325,3 +325,7 @@ h1 {
 .gridder-content{
     display:none;
 }
+
+#ifr {
+    visibility: hidden;
+}

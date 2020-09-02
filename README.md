@@ -29,7 +29,7 @@ You will be prompted with:
 Command>
 ```
 
-Navigate to the page: [http://localhost:8081](http://localhost:8081) and you will see the client wherein the link will be requested, interpreted, and rendered.
+Navigate to the page: [http://localhost:8081](http://localhost:8081) and you will see the client wherein the commands will be interpreted and media will be loaded.
 
 ## Commands
 The following commands are currently supported:

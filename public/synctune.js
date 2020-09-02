@@ -23,6 +23,7 @@ var playlist = [];  // Current playlist
 var jn = 0;         // Current request number
 var cmdQueue = ['load']; // Queue of commands
 window.cmdQueue = cmdQueue;
+var cmdIdx = 0;     // Current requested command index
 
 // Is an element contained within two index boundaries?
 function conT(e, ind, end){
@@ -153,6 +154,10 @@ function execCmd(cmd){
                     console.log("SEEK: " + mat[1]);
                     if (wt == 'yt'){
                         widget_yt.seekTo(parseFloat(mat[1], 10)/1000.0);
+                        if (widget_yt.getPlayerState() == 2){
+                            // Paused does not cause state change on seek
+                            cmdQueue.shift();
+                        }
                     }
                     else if (wt == 'sc'){
                         widget_sc.seekTo(parseInt(mat[1], 10));
